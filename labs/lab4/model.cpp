@@ -70,7 +70,31 @@ bool Model::matched(int row, int column) {
 void Model::flip(int row, int column) {
     // If the row and column are not valid, break out and don't do anything
     if (!valid(row, column)) { return; }
+	
     visible[row][column] = grid[row][column];
+	
+	switch (state){
+	case INIT:
+		lastRow.clear();
+		lastColumn.clear();
+		state = FIRST;
+		break;
+	case FIRST;
+	if (grid[lastRows[0]][lastColumns[0]] == grid[row][column]) {
+			state = INIT;
+		} else {
+			state = NO_MATCH;
+		}
+		break;
+	case NO_MATCH;
+			for (int i = 0; i < lastRows.size(); i++) {
+			visible[lastRows[i]][lastColumns[i]] = '*';
+		}
+		lastRows.clear();
+		lastColumns.clear();
+		state = FIRST;
+		break;
+	}
 }
 // If everything is visible, then it's game over
 bool Model::gameOver() {
